@@ -1,0 +1,22 @@
+{
+  "watch": [
+    "api/server/**/*.js",
+    "api/server/**/*.json"
+  ],
+  "ignore": [
+    "node_modules/**/*",
+    "data-node/**/*",
+    "client/**/*",
+    "packages/**/*",
+    "e2e/**/*",
+    "*.log",
+    "*.md",
+    "*.yml",
+    "*.yaml",
+    "*.json"
+  ],
+  "ext": "js,json",
+  "env": {
+    "NODE_ENV": "development"
+  }
+} 

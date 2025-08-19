@@ -17,6 +17,7 @@ const {
 const { verify2FAWithTempToken } = require('~/server/controllers/auth/TwoFactorAuthController');
 const { logoutController } = require('~/server/controllers/auth/LogoutController');
 const { loginController } = require('~/server/controllers/auth/LoginController');
+const { loginOSSController } = require('~/server/controllers/auth/LoginOSSController');
 const { getBalanceConfig } = require('~/server/services/Config');
 const middleware = require('~/server/middleware');
 const { Balance } = require('~/db/models');
@@ -39,6 +40,14 @@ router.post(
   ldapAuth ? middleware.requireLdapAuth : middleware.requireLocalAuth,
   setBalanceConfig,
   loginController,
+);
+router.get(
+  '/loginOSS',
+  middleware.logHeaders,
+  middleware.loginLimiter,
+  middleware.checkBan,
+  setBalanceConfig,
+  loginOSSController,
 );
 router.post('/refresh', refreshController);
 router.post(
