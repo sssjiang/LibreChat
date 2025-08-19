@@ -18,6 +18,7 @@ const { verify2FAWithTempToken } = require('~/server/controllers/auth/TwoFactorA
 const { logoutController } = require('~/server/controllers/auth/LogoutController');
 const { loginController } = require('~/server/controllers/auth/LoginController');
 const { loginOSSController } = require('~/server/controllers/auth/LoginOSSController');
+const { encryptAesController, decryptAesController } = require('~/server/controllers/auth/AesController');
 const { getBalanceConfig } = require('~/server/services/Config');
 const middleware = require('~/server/middleware');
 const { Balance } = require('~/db/models');
@@ -49,6 +50,10 @@ router.get(
   setBalanceConfig,
   loginOSSController,
 );
+
+// AES helpers (dev/testing)
+router.get('/aes/encrypt', encryptAesController);
+router.get('/aes/decrypt', decryptAesController);
 router.post('/refresh', refreshController);
 router.post(
   '/register',

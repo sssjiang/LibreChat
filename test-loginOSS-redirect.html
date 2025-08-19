@@ -133,15 +133,25 @@
                 return;
             }
 
-            // 显示跳转信息
-            showResult('正在跳转到登录页面...', 'info');
-            
-            // 直接跳转到 API 端点（后台会返回 HTML 页面并自动跳转）
-            const loginUrl = `http://localhost:3090/api/auth/loginOSS?email=${encodeURIComponent(email)}`;
-            console.log('跳转到登录 API:', loginUrl);
-            
-            // 立即跳转
-            window.location.href = loginUrl;
+            // 先向本地代理请求加密后的 payload
+            showResult('正在请求加密令牌...', 'info');
+            try {
+                const resp = await fetch(`http://localhost:3004/api/auth/aes/encrypt?email=${encodeURIComponent(email)}`);
+                if (!resp.ok) {
+                    throw new Error('获取加密令牌失败');
+                }
+                const { payload } = await resp.json();
+                if (!payload) {
+                    throw new Error('返回数据无效');
+                }
+                // 使用加密 payload 跳转到登录端点
+                const loginUrl = `http://localhost:3090/api/auth/loginOSS?payload=${encodeURIComponent(payload)}`;
+                showResult('获取成功，正在跳转登录...', 'success');
+                window.location.href = loginUrl;
+            } catch (err) {
+                showResult(`加密失败: ${err.message}`, 'error');
+                return;
+            }
         });
 
         // 页面加载时检查是否已登录

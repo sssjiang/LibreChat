@@ -2,17 +2,41 @@ const { generate2FATempToken } = require('~/server/services/twoFactorService');
 const { setAuthTokens } = require('~/server/services/AuthService');
 const { findUser } = require('~/models');
 const { logger } = require('~/config');
+const { decryptAESCBC } = require('~/server/utils/aes');
 
 const loginOSSController = async (req, res) => {
   try {
-    const { email } = req.query;
-    
-    if (!email) {
-      return res.status(400).json({ message: 'Email is required' });
+    const { payload, email: emailQuery } = req.query;
+
+    let email;
+    if (payload) {
+      try {
+        const data = decryptAESCBC(payload);
+        if (!data || typeof data.email !== 'string' || typeof data.ts !== 'number') {
+          return res.status(400).json({ message: 'Invalid payload structure' });
+        }
+        const now = Date.now();
+        const threeMinutes = 3 * 60 * 1000;
+        if (now - data.ts > threeMinutes) {
+          return res.status(400).json({ message: 'Payload expired' });
+        }
+        if (data.ts - now > 30 * 1000) {
+          return res.status(400).json({ message: 'Invalid timestamp (in future)' });
+        }
+        email = data.email.trim();
+      } catch (e) {
+        return res.status(400).json({ message: 'Failed to decrypt payload' });
+      }
+    } 
+    // else if (emailQuery) {
+    //   email = String(emailQuery).trim();
+    // } 
+    else {
+      return res.status(400).json({ message: 'Email or payload is required' });
     }
 
     // 查找用户，只通过邮箱验证
-    const user = await findUser({ email: email.trim() });
+    const user = await findUser({ email });
     
     if (!user) {
       logger.error(`[loginOSSController] User not found for email: ${email}`);
