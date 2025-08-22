@@ -1,12 +1,12 @@
 const axios = require('axios');
 
-// 测试 loginOSS API
-async function testLoginOSS() {
+// 测试 loginSSO API
+async function testloginSSO() {
   try {
     const email = 'test@gmail.com'; // 替换为实际的邮箱地址
-    const url = `http://localhost:3090/api/auth/loginOSS?email=${encodeURIComponent(email)}`;
+    const url = `http://localhost:3090/api/auth/loginSSO?email=${encodeURIComponent(email)}`;
     
-    console.log('Testing loginOSS API...');
+    console.log('Testing loginSSO API...');
     console.log('URL:', url);
     
     const response = await axios.get(url);
@@ -19,7 +19,7 @@ async function testLoginOSS() {
     }
     
   } catch (error) {
-    console.error('❌ Error testing loginOSS API:');
+    console.error('❌ Error testing loginSSO API:');
     if (error.response) {
       console.error('Status:', error.response.status);
       console.error('Data:', error.response.data);
@@ -30,4 +30,4 @@ async function testLoginOSS() {
 }
 
 // 运行测试
-testLoginOSS(); 
+testloginSSO(); 

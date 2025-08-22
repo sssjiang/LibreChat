@@ -14,7 +14,7 @@ app.use(express.static(__dirname));
 
 // 主页路由
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'test-loginOSS-redirect.html'));
+  res.sendFile(path.join(__dirname, 'test-loginSSO-redirect.html'));
 });
 
 // 代理到后端获取加密 payload，避免浏览器 CORS
@@ -42,7 +42,7 @@ app.get('/api/auth/aes/encrypt', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 测试页面服务器已启动!`);
   console.log(`📱 请在浏览器中访问: http://localhost:${PORT}`);
-  console.log(`🔗 或者直接访问: http://localhost:${PORT}/test-loginOSS-redirect.html`);
+  console.log(`🔗 或者直接访问: http://localhost:${PORT}/test-loginSSO-redirect.html`);
   console.log(`\n💡 这样可以避免 CORS 问题，因为现在是从 http://localhost:3001 访问 http://localhost:3090`);
 });
 

@@ -107,7 +107,7 @@ const sendErrorPage = (res, { status = 400, title = '登录失败', message = '�
   return res.status(status).send(html);
 };
 
-const loginOSSController = async (req, res) => {
+const loginSSOController = async (req, res) => {
   try {
     const { payload, email: emailQuery } = req.query;
 
@@ -142,13 +142,13 @@ const loginOSSController = async (req, res) => {
     const user = await findUser({ email });
     
     if (!user) {
-      logger.error(`[loginOSSController] User not found for email: ${email}`);
+      logger.error(`[loginSSOController] User not found for email: ${email}`);
       return sendErrorPage(res, { status: 404, title: '登录失败', message: '用户不存在或未注册' });
     }
 
     // 检查用户是否被禁用
     if (user.expiresAt && new Date() > user.expiresAt) {
-      logger.error(`[loginOSSController] User account expired for email: ${email}`);
+      logger.error(`[loginSSOController] User account expired for email: ${email}`);
       return sendErrorPage(res, { status: 403, title: '账号不可用', message: '账户已过期，请联系管理员' });
     }
 
@@ -165,7 +165,7 @@ const loginOSSController = async (req, res) => {
     // 生成认证令牌并设置 cookie
     const token = await setAuthTokens(user._id, res);
 
-    logger.info(`[loginOSSController] OSS login successful for email: ${email}`);
+    logger.info(`[loginSSOController] SSO login successful for email: ${email}`);
     
     // 返回 HTML 页面，自动跳转到目标页面
     const html = `
@@ -326,11 +326,11 @@ const loginOSSController = async (req, res) => {
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     return res.status(200).send(html);
   } catch (err) {
-    logger.error('[loginOSSController] Error:', err);
+    logger.error('[loginSSOController] Error:', err);
     return sendErrorPage(res, { status: 500, title: '服务器错误', message: '服务器错误，请稍后再试' });
   }
 };
 
 module.exports = {
-  loginOSSController,
+  loginSSOController,
 }; 

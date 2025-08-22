@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LoginOSS API 测试</title>
+    <title>loginSSO API 测试</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -87,7 +87,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>LoginOSS API 测试</h1>
+        <h1>loginSSO API 测试</h1>
         
         <form id="loginForm">
             <div class="form-group">
@@ -145,7 +145,7 @@
                     throw new Error('返回数据无效');
                 }
                 // 使用加密 payload 跳转到登录端点
-                const loginUrl = `http://localhost:3090/api/auth/loginOSS?payload=${encodeURIComponent(payload)}`;
+                const loginUrl = `http://localhost:3090/api/auth/loginSSO?payload=${encodeURIComponent(payload)}`;
                 showResult('获取成功，正在跳转登录...', 'success');
                 window.location.href = loginUrl;
             } catch (err) {

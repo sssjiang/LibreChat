@@ -1,30 +1,30 @@
-# LoginOSS API 实现总结
+# loginSSO API 实现总结
 
 ## 新增功能
 
-我们成功为 LibreChat 添加了一个新的登录 API 接口 `/loginOSS`，该接口允许用户通过邮箱地址进行无密码登录。
+我们成功为 LibreChat 添加了一个新的登录 API 接口 `/loginSSO`，该接口允许用户通过邮箱地址进行无密码登录。
 
 ## 实现的文件
 
 ### 1. 新增控制器
-- **文件**: `api/server/controllers/auth/LoginOSSController.js`
-- **功能**: 处理 OSS 登录逻辑，验证邮箱并生成认证令牌
+- **文件**: `api/server/controllers/auth/loginSSOController.js`
+- **功能**: 处理 SSO 登录逻辑，验证邮箱并生成认证令牌
 
 ### 2. 修改的路由文件
 - **文件**: `api/server/routes/auth.js`
-- **修改**: 添加了新的 GET 路由 `/loginOSS`
+- **修改**: 添加了新的 GET 路由 `/loginSSO`
 
 ### 3. 测试和文档文件
-- **测试脚本**: `test-loginOSS.js` - 用于测试新 API
-- **API 文档**: `LOGINOSS_API.md` - 详细的 API 使用文档（废弃）
-- **使用示例**: `examples/loginOSS-example.js` - 前端集成示例(废弃)
-- **总结文档**: `LOGINOSS_SUMMARY.md` - 本文档
+- **测试脚本**: `test-loginSSO.js` - 用于测试新 API
+- **API 文档**: `loginSSO_API.md` - 详细的 API 使用文档（废弃）
+- **使用示例**: `examples/loginSSO-example.js` - 前端集成示例(废弃)
+- **总结文档**: `loginSSO_SUMMARY.md` - 本文档
 
 ## API 特性
 
 ### 请求格式
 ```
-GET /api/auth/loginOSS?email=user@example.com
+GET /api/auth/loginSSO?email=user@example.com
 ```
 
 ### 主要功能
@@ -75,11 +75,11 @@ bun run b:api:dev
 
 ### 2. 测试 API
 ```bash
-node test-loginOSS.js
+node test-loginSSO.js
 ```
 
 ### 3. 前端集成
-参考 `examples/loginOSS-example.js` 中的示例代码
+参考 `examples/loginSSO-example.js` 中的示例代码
 
 ## 错误处理
 
@@ -111,7 +111,7 @@ API 包含完整的错误处理机制：
 4. 增加更详细的审计日志
 5. 支持批量用户验证 
 
-# LoginOSS HTML 页面自动跳转方案
+# loginSSO HTML 页面自动跳转方案
 
 ## 🎯 **方案3：后台返回 HTML 页面自动跳转**
 
@@ -126,7 +126,7 @@ API 包含完整的错误处理机制：
 ```
 用户输入邮箱 → 点击登录 → 跳转到 API
 ```
-- 前端只需要：`window.location.href = '/api/auth/loginOSS?email=...'`
+- 前端只需要：`window.location.href = '/api/auth/loginSSO?email=...'`
 - **只跳转一次**，避免多次跳转问题
 
 ### 2. **后台处理**
@@ -190,8 +190,8 @@ npm run backend:dev
 ```
 
 ### **2. 测试登录**
-- 使用测试页面：`test-loginOSS-redirect.html`
-- 或直接访问：`http://localhost:3090/api/auth/loginOSS?email=test@gmail.com`
+- 使用测试页面：`test-loginSSO-redirect.html`
+- 或直接访问：`http://localhost:3090/api/auth/loginSSO?email=test@gmail.com`
 
 ### **3. 验证结果**
 - ✅ 看到美观的成功页面
@@ -201,7 +201,7 @@ npm run backend:dev
 
 ## 🔧 **技术实现细节**
 
-### **后端 (LoginOSSController.js)**
+### **后端 (loginSSOController.js)**
 ```javascript
 // 1. 验证用户并设置 cookie
 const token = await setAuthTokens(user._id, res);
@@ -214,10 +214,10 @@ res.setHeader('Content-Type', 'text/html; charset=utf-8');
 return res.status(200).send(html);
 ```
 
-### **前端 (test-loginOSS-redirect.html)**
+### **前端 (test-loginSSO-redirect.html)**
 ```javascript
 // 只跳转一次到 API
-const loginUrl = `http://localhost:3090/api/auth/loginOSS?email=${email}`;
+const loginUrl = `http://localhost:3090/api/auth/loginSSO?email=${email}`;
 window.location.href = loginUrl;
 
 // 后续跳转由后台 HTML 页面处理
@@ -226,7 +226,7 @@ window.location.href = loginUrl;
 ## 🎉 **最终效果**
 
 1. **用户输入邮箱** → 点击登录
-2. **页面跳转一次** → 到 `/api/auth/loginOSS?email=...`
+2. **页面跳转一次** → 到 `/api/auth/loginSSO?email=...`
 3. **后台验证并设置 cookie** → 自动完成
 4. **显示成功页面** → 美观的界面
 5. **3秒后自动跳转** → 到 `/c/new`
@@ -247,4 +247,4 @@ window.location.href = loginUrl;
 - ✅ **用户体验好**：美观的界面和流畅的流程
 - ✅ **技术可靠**：基于 cookie 的认证机制
 
-现在你的 LoginOSS API 可以完美工作，用户只需要输入邮箱，其他一切都由后台自动处理！🚀 
+现在你的 loginSSO API 可以完美工作，用户只需要输入邮箱，其他一切都由后台自动处理！🚀 
