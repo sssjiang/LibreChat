@@ -2,7 +2,7 @@
 
 ## 新增功能
 
-为 LibreChat 添加了一个新的登录 API 接口 `/loginSSO`，该接口允许用户通过邮箱地址进行无密码登录。
+为 LibreChat 添加了一个新的登录 API 接口 `/loginSSO`，该接口允许在cancer probot注册登陆的用户进行无密码登录LibreChat中。
 
 ## 实现的文件
 
