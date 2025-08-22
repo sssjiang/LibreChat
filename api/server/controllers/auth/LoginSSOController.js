@@ -1,8 +1,9 @@
 const { generate2FATempToken } = require('~/server/services/twoFactorService');
 const { setAuthTokens } = require('~/server/services/AuthService');
-const { findUser } = require('~/models');
+const { findUser, createUser } = require('~/models');
 const { logger } = require('~/config');
 const { decryptAESCBC } = require('~/server/utils/aes');
+const { getBalanceConfig } = require('~/server/services/Config');
 
 const sendErrorPage = (res, { status = 400, title = '登录失败', message = '请求出现错误', redirectUrl = '/' } = {}) => {
   const html = `
@@ -139,11 +140,28 @@ const loginSSOController = async (req, res) => {
     }
 
     // 查找用户，只通过邮箱验证
-    const user = await findUser({ email });
+    let user = await findUser({ email });
     
     if (!user) {
-      logger.error(`[loginSSOController] User not found for email: ${email}`);
-      return sendErrorPage(res, { status: 404, title: '登录失败', message: '用户不存在或未注册' });
+      // 自动创建用户（无密码，标记邮箱已验证）
+      const username = email.split('@')[0];
+      const newUserData = {
+        provider: 'local',
+        username,
+        email,
+        emailVerified: true,
+        name: username,
+        avatar: null,
+      };
+
+      try {
+        const balanceConfig = await getBalanceConfig();
+        user = await createUser(newUserData, balanceConfig, true, true);
+        logger.info(`[loginSSOController] Auto-created user for email: ${email}`);
+      } catch (createErr) {
+        logger.error('[loginSSOController] Failed to auto-create user:', createErr);
+        return sendErrorPage(res, { status: 500, title: '登录失败', message: '创建用户失败，请稍后重试' });
+      }
     }
 
     // 检查用户是否被禁用
