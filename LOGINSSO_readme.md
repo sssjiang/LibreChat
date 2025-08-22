@@ -71,15 +71,30 @@ docker compose -f docker-compose-others.yml up
 
 ### 2. 以开发者模式启动前后端服务器
 ```bash
+# 安装依赖
+npm ci
 # 启动前端服务
 npm run front:dev
 # 启动后端服务
- npm run backend:dev
+npm run backend:dev
 ```
+### 3. 以生产方式启动前后端服务器
+```bash
+# 安装依赖
+npm ci
+# 启动前端服务
+npm run frontend
+# 启动后端服务
+npm run backend
+
+Visit http://localhost:3080/
+```
+下次再启动Librechat的时候只需要使用 npm run backend 命令
+
 ## 错误处理
 
 API 包含完整的错误处理机制：
-- 400: 邮箱参数缺失
+- 400: 邮箱参数缺失，请求过期等情况
 - 403: 账户过期
 - 500: 服务器错误
 
