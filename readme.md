@@ -62,6 +62,20 @@ email: 'xxx', ts: xxx
 3. **邮箱唯一性**: 确保邮箱地址的唯一性和有效性
 
 ## 部署方法
+### 0. 设置环境变量
+```bash
+git clone https://github.com/sssjiang/LibreChat.git
+```
+
+```bash
+cd LibreChat
+```
+
+```bash
+cp .env.example .env
+
+# 设置 CHECK_BALANCE 和 START_BALANCE 即可控制用户的使用量，在DB的balances这个表中存储信息
+```
 
 ### 1. 启动 docker-compose-others.yml
 ```bash
